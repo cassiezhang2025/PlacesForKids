@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Metropolitan Museum of Art",
+        "address": "1000 5th Ave, New York, NY 10028",
+        "lat": 40.7789,
+        "lng": -73.9637,
+        "category": "Museum"
+    },
+    {
+        "name": "Bronx Zoo",
+        "address": "2300 Southern Blvd, Bronx, NY 10460",
+        "lat": 40.8501,
+        "lng": -73.8819,
+        "category": "Zoo"
+    }
+    
+]
