@@ -12,6 +12,20 @@
         "lat": 40.8501,
         "lng": -73.8819,
         "category": "Zoo"
+    },
+    {
+        "name": "Bergen County Zoo",
+        "address": "Van Saun County Park, 216 Forest Ave, Paramus, NJ 07652",
+        "lat": 40.9338, 
+        "lng": -74.0475,
+        "category": "Zoo"
+    },
+    {
+        "name": "White Post Farms of Melville",
+        "address": "250 Old Country Rd, Melville, NY 11747",
+        "lat": 40.7957, 
+        "lng": -73.4071, 
+        "category": "Farm"
     }
     
 ]
