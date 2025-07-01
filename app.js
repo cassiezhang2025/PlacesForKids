@@ -1,5 +1,5 @@
 // Load the addresses from the JSON file
-fetch('addresses.json')
+fetch('https://api.sheetbest.com/sheets/776bfffa-c92b-4915-9fb6-945e2b3762e4')
   .then(response => response.json())
   .then(data => {
     const addresses = data;
