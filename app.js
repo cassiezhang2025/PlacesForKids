@@ -39,6 +39,9 @@ function initializeMap(addresses) {
   document.getElementById('farmBtn').addEventListener('click', () => toggleMarkers('farm', markers, map));
   document.getElementById('hikingBtn').addEventListener('click', () => toggleMarkers('hiking', markers, map));
   document.getElementById('eventBtn').addEventListener('click', () => toggleMarkers('event', markers, map));
+  document.getElementById('beachBtn').addEventListener('click', () => toggleMarkers('beaches', markers, map));
+  document.getElementById('sandboxBtn').addEventListener('click', () => toggleMarkers('sandbox', markers, map));
+  document.getElementById('natureBtn').addEventListener('click', () => toggleMarkers('nature', markers, map));
 
   // 搜索按钮点击事件
   document.getElementById('searchBtn').addEventListener('click', () => {
