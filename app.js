@@ -25,7 +25,8 @@ fetch('https://api.sheetbest.com/sheets/776bfffa-c92b-4915-9fb6-945e2b3762e4')
       if (!lat || !lng) return;
   
       const marker = L.marker([lat, lng]).addTo(map);
-      marker.bindPopup(`<b>${address.name}</b><br>${address.address}`);
+      const note = address.note ? `<br><i>${address.note}</i>` : '';
+      marker.bindPopup(`<b>${address.name}</b><br>${address.address}${note}`);      
       marker.addressData = address;
       allMarkers.push(marker);
   
