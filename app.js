@@ -29,12 +29,17 @@ fetch('https://api.sheetbest.com/sheets/776bfffa-c92b-4915-9fb6-945e2b3762e4')
       marker.addressData = address;
       allMarkers.push(marker);
   
-      const category = (address.category || '').toLowerCase();
-      if (!markers[category]) {
-        markers[category] = [];
-      }
-      markers[category].push(marker);
-      if (category) categorySet.add(category);  // 收集分类
+      const categoryStr = (address.category || '').toLowerCase();
+      const categoryList = categoryStr.split(',').map(c => c.trim()).filter(c => c);
+      
+      categoryList.forEach(cat => {
+        if (!markers[cat]) {
+          markers[cat] = [];
+        }
+        markers[cat].push(marker);
+        categorySet.add(cat);  // 收集所有分类
+      });
+      
     });
   
     // ✅ 动态生成分类按钮
