@@ -6,7 +6,7 @@ fetch('https://api.sheetbest.com/sheets/776bfffa-c92b-4915-9fb6-945e2b3762e4')
     initializeMap(addresses);
   })
   .catch(error => console.error('Error loading addresses:', error));
-
+// test
   function initializeMap(addresses) {
     const map = L.map('map').setView([40.0583, -74.4057], 8);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
