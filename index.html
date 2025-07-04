@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Address Map</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-    <link rel="stylesheet" href="styles.css" />
+  <title>Places for Kids</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div id="controls">
-        <input type="text" id="searchInput" placeholder="Search by name or address">
-        <button id="searchBtn">Search</button>
-        <button id="resetBtn">Reset</button>
-        <div id="categoryButtons">
-
-        </div>
+  <div id="controls">
+    <div id="searchControls">
+      <input type="text" id="searchInput" placeholder="Search by name or address" />
+      <button id="searchBtn">Search</button>
+      <button id="resetBtn">Reset</button>
     </div>
-    <div id="map"></div>
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-    <script src="app.js"></script>
+    <div id="categoryButtons">
+      <button class="category-btn" data-category="Zoo">Zoo</button>
+      <button class="category-btn" data-category="Museum">Museum</button>
+      <button class="category-btn" data-category="Farm">Farm</button>
+      <button class="category-btn" data-category="Playground">Playground</button>
+      <button class="category-btn" data-category="Splash park">Splash park</button>
+      <button class="category-btn" data-category="Nature">Nature</button>
+      <button class="category-btn" data-category="Sandbox">Sandbox</button>
+      <button class="category-btn" data-category="Park">Park</button>
+      <button class="category-btn" data-category="Pool">Pool</button>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

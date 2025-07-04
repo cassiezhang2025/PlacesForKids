@@ -1,4 +1,4 @@
-// Load the addresses from the JSON file
+// 动态加载地址数据（来自 SheetBest）
 fetch('https://api.sheetbest.com/sheets/776bfffa-c92b-4915-9fb6-945e2b3762e4')
   .then(response => response.json())
   .then(data => {
@@ -6,97 +6,102 @@ fetch('https://api.sheetbest.com/sheets/776bfffa-c92b-4915-9fb6-945e2b3762e4')
     initializeMap(addresses);
   })
   .catch(error => console.error('Error loading addresses:', error));
-// test
-  function initializeMap(addresses) {
-    const map = L.map('map').setView([40.0583, -74.4057], 8);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data &copy; OpenStreetMap contributors',
-      maxZoom: 18,
-    }).addTo(map);
-  
-    const markers = {};
-    const allMarkers = [];
-    const categorySet = new Set();
-  
-    // 创建 Marker 并收集分类
+
+function initializeMap(addresses) {
+  // 初始化地图并定位到新泽西
+  const map = L.map('map').setView([40.0583, -74.4057], 8);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data © OpenStreetMap contributors',
+    maxZoom: 18,
+  }).addTo(map);
+
+  const allMarkers = [];
+  const categoryMarkers = {};
+
+  // 创建标记并分类
+  addresses.forEach(address => {
+    if (!address.lat || !address.lng) return;
+
+    const lat = parseFloat(address.lat);
+    const lng = parseFloat(address.lng);
+    const categoryList = address.category?.toLowerCase().split(',').map(c => c.trim()) || [];
+
+    const popupText = `<b>${address.name}</b><br>${address.address || ''}<br>${address.note || ''}`;
+    const marker = L.marker([lat, lng]).bindPopup(popupText);
+    marker.addTo(map);
+    allMarkers.push(marker);
+
+    categoryList.forEach(cat => {
+      if (!categoryMarkers[cat]) {
+        categoryMarkers[cat] = [];
+      }
+      categoryMarkers[cat].push(marker);
+    });
+  });
+
+  // 搜索按钮点击
+  document.getElementById('searchBtn').addEventListener('click', () => {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    map.eachLayer(layer => {
+      if (layer instanceof L.Marker) {
+        map.removeLayer(layer);
+      }
+    });
+
     addresses.forEach(address => {
-      const lat = parseFloat(address.lat);
-      const lng = parseFloat(address.lng);
-      if (!lat || !lng) return;
-  
-      const marker = L.marker([lat, lng]).addTo(map);
-      const note = address.note ? `<br><i>${address.note}</i>` : '';
-      marker.bindPopup(`<b>${address.name}</b><br>${address.address}${note}`);      
-      marker.addressData = address;
-      allMarkers.push(marker);
-  
-      const categoryStr = (address.category || '').toLowerCase();
-      const categoryList = categoryStr.split(',').map(c => c.trim()).filter(c => c);
-      
-      categoryList.forEach(cat => {
-        if (!markers[cat]) {
-          markers[cat] = [];
-        }
-        markers[cat].push(marker);
-        categorySet.add(cat);  // 收集所有分类
-      });
-      
-    });
-  
-    // ✅ 动态生成分类按钮
-    const buttonContainer = document.getElementById('categoryButtons');
-    categorySet.forEach(cat => {
-      const btn = document.createElement('button');
-      btn.textContent = capitalize(cat);
-      btn.addEventListener('click', () => toggleMarkers(cat, markers, map));
-      buttonContainer.appendChild(btn);
-    });
-  
-    // 搜索逻辑
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      const term = document.getElementById('searchInput').value.toLowerCase();
-      allMarkers.forEach(marker => {
-        const d = marker.addressData;
-        const isMatch =
-          (d.name || '').toLowerCase().includes(term) ||
-          (d.address || '').toLowerCase().includes(term) ||
-          (d.city || '').toLowerCase().includes(term) ||
-          (d.state || '').toLowerCase().includes(term) ||
-          (d.zipcode || '').toLowerCase().includes(term);
-  
-        if (isMatch) {
-          marker.addTo(map);
-        } else {
-          map.removeLayer(marker);
-        }
-      });
-    });
-  
-    document.getElementById('searchInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        document.getElementById('searchBtn').click();
+      const fields = [
+        address.name,
+        address.address,
+        address.note,
+        address.city,
+        address.state,
+        address.zipcode
+      ];
+
+      const match = fields.some(field =>
+        field && field.toLowerCase().includes(searchTerm)
+      );
+
+      if (match) {
+        const lat = parseFloat(address.lat);
+        const lng = parseFloat(address.lng);
+        const popupText = `<b>${address.name}</b><br>${address.address || ''}<br>${address.note || ''}`;
+        const marker = L.marker([lat, lng]).bindPopup(popupText).addTo(map);
+        marker.openPopup();
+        allMarkers.push(marker);
       }
     });
-  
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      document.getElementById('searchInput').value = '';
-      allMarkers.forEach(marker => marker.addTo(map));
-    });
-  }
-  
-  // 工具函数：首字母大写
-  function capitalize(word) {
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  }
-  
-  // 显示/隐藏 Marker
-  function toggleMarkers(category, markers, map) {
-    Object.keys(markers).forEach(key => {
-      if (key === category) {
-        markers[key].forEach(marker => marker.addTo(map));
-      } else {
-        markers[key].forEach(marker => map.removeLayer(marker));
+  });
+
+  // ⌨️ 支持按 Enter 触发搜索
+  document.getElementById('searchInput').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      document.getElementById('searchBtn').click();
+    }
+  });
+
+  // Reset 按钮：恢复所有
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    map.eachLayer(layer => {
+      if (layer instanceof L.Marker) {
+        map.removeLayer(layer);
       }
     });
-  }
-  
+    allMarkers.forEach(marker => marker.addTo(map));
+  });
+
+  // 分类按钮点击事件
+  document.querySelectorAll('.category-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const category = button.dataset.category.toLowerCase();
+      map.eachLayer(layer => {
+        if (layer instanceof L.Marker) {
+          map.removeLayer(layer);
+        }
+      });
+      if (categoryMarkers[category]) {
+        categoryMarkers[category].forEach(marker => marker.addTo(map));
+      }
+    });
+  });
+}
