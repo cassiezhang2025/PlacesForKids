@@ -66,7 +66,11 @@ function initializeMap(addresses) {
         const lat = parseFloat(address.lat);
         const lng = parseFloat(address.lng);
         const popupText = `<b>${address.name}</b><br>${address.address || ''}<br>${address.note || ''}`;
-        const marker = L.marker([lat, lng]).bindPopup(popupText).addTo(map);
+        if (address.link) {
+          popupText += `<br><a href="${address.link}" target="_blank">More info</a>`;
+        }
+
+        const marker = L.marker([lat, lng]).bindTooltip(address.name).bindPopup(popupText).addTo(map);
         marker.openPopup();
         allMarkers.push(marker);
       }
